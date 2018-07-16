@@ -12,6 +12,6 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(calibrate_camera main.cpp)
-target_link_libraries(calibrate_camera stdc++fs ${OpenCV_LIBS})
+target_link_libraries(calibrate_camera ${OpenCV_LIBS})
 
 file(COPY camera_cal DESTINATION ./)

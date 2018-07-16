@@ -13,14 +13,14 @@ using namespace cv;
 static bool findPoints(vector<Point3f> objp, vector<vector<Point3f>>& objpoints, vector<vector<Point2f>>& imgpoints) {
   string path = "./camera_cal";
 
-  for (int i = 1; i < 10; i++) {
+  for (int i = 0; i < 25; i++) {
     ostringstream os;
-    os << "./camera_cal/calibration" << i << ".jpg";
+    os << "./camera_cal/calibrate" << i << ".jpg";
     string p(os.str());
 
     Mat img = imread(p.c_str(), IMREAD_COLOR);
     if (img.empty()) {
-      return false;
+      continue;
     }
 
     Mat gray;
@@ -53,8 +53,32 @@ static void calibrate_and_save(vector<vector<Point3f>>& objpoints, vector<vector
   intrinsic.ptr<float>(0)[0] = 1;
   intrinsic.ptr<float>(1)[1] = 1;
 
-  calibrateCamera(objpoints, imgpoints, Size(1280, 720), intrinsic,
+  calibrateCamera(objpoints, imgpoints, Size(640, 480), intrinsic,
           distCoeffs, rvecs, tvecs);
+
+  FileStorage fs("cal_params.yaml", FileStorage::WRITE);
+  fs << "mtx" << intrinsic;
+  fs << "dist" << distCoeffs;
+
+  for (int i = 0; i < 25; i++) {
+    ostringstream os;
+    os << "./camera_cal/calibrate" << i << ".jpg";
+    string p(os.str());
+
+    Mat img = imread(p.c_str(), IMREAD_COLOR);
+    if (img.empty()) {
+      continue;
+    }
+
+    Mat undist;
+    undistort(img, undist, intrinsic, distCoeffs);
+
+    Mat result(Size(1280, 480), CV_8UC3);
+    img.copyTo(result(Rect(0, 0, 640, 480)));
+    undist.copyTo(result(Rect(640, 0, 640, 480)));
+    imshow("Result", result);
+    waitKey(0);
+  }
 }
 
 int main() {
