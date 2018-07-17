@@ -3,10 +3,6 @@ project(calibrate_camera)
 
 set(CMAKE_CXX_STANDARD 11)
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set(OpenCV_DIR C:/Users/gw889026/CLionProjects/opencv)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-
 find_package(OpenCV REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
