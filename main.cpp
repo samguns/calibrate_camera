@@ -61,9 +61,10 @@ static void calibrate_and_save(vector<vector<Point3f>>& objpoints,
   calibrateCamera(objpoints, imgpoints, img_size, intrinsic,
           distCoeffs, rvecs, tvecs);
 
-  FileStorage fs("cal_params.yaml", FileStorage::WRITE);
+  FileStorage fs("cal_params.yml", FileStorage::WRITE);
   fs << "mtx" << intrinsic;
   fs << "dist" << distCoeffs;
+  fs.release();
 
   for (int i = 0; i < 25; i++) {
     ostringstream os;
